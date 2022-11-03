@@ -1,0 +1,30 @@
+################################################################################################################
+# This is a sources file. 
+# This is where you declare your source tables contained within the RAW schema of your database,
+# as well as apply descriptions and tests against the tables.
+# Full documentation: https://docs.getdbt.com/docs/building-a-dbt-project/using-sources
+################################################################################################################
+
+
+version: 2
+
+#sources:
+#  - name: raw
+#    description: Contains flattened data about business purpose, etc.
+#    database: your snowflake database name
+#    schema: raw
+#    tables:
+#      - name: your_table_name_raw
+#        description: Detailed description of table contents
+#        columns:
+#          - name: id
+#            description: Primary key of table your_table_name_raw
+#            tests:
+#              - unique
+#              - not_null
+#          - name: status
+#            description: Note that the status can change over time
+#
+#      - name: ...
+#
+#  - name: ...
