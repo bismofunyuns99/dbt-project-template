@@ -70,7 +70,7 @@ on-run-end:
 #################################################################
 
 # Configuring models. Full documentation: https://docs.getdbt.com/docs/configuring-models
-# For model config, we tell dbt how to build the models, where to build them and which Snowflake warehouseto use. 
+# For model config, we tell dbt how to build the models, where to build them and which Snowflake warehouse to use. 
 # NOTE: These settings can be overridden in the individual model files using the `{{ config(...) }}` macro. 
 
 models:
@@ -83,28 +83,23 @@ models:
     transform:
       # This configuration builds every model under the tranform directory into Snowflake schema named "transform".
       +schema: transform
-      # This config does a create/replace on every run. For "incremental" loads, override this config within each model file
+      # This config does a create/replace on every run. 
+      #For "incremental" loads, override this config within each model file
       +materialized:  table  
 
         # The following subfolders are simply for organizing models within your project. 
         # This can be helpful for organizing models in a multi-step pipeline using multiple intermediate tables.  
-        # These folders do not correspond a "layer_x" schema in Snowflake.to  and, for example, do not correspond to 
+        # These folders do not correspond a "layer_x" schema in Snowflake
         
-        layer_1:
+      layer_1:
         # Configs below apply to all models under models/transform/layer_1 folder
 
-        layer_2:
+      layer_2:
        # Configs below apply to all models under models/transform/layer_2 folder
 
       data_product:
       # This configuration builds every model under the data_product directory into Snowflake schema named "data_product".
         +schema: transform
-
-    data_product:
-      # This configuration builds every model under the tranform directory into Snowflake schema named "data_product".
-      +schema: data_product
-      # This config does a create/replace on every run. For "incremental" loads, override this config within each model file
-      +materialized:  table  
 
   dbt_project_evaluator:
     +schema: project_evaluator
