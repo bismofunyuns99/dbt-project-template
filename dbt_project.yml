@@ -28,7 +28,8 @@ vars:
   dbt_project_evaluator:  
     # The following sets of variables (i.e. folder names, suffixes, & prefixes) are used with the package "dbt_project_evaluator".
     # To add a new "layer", update the variable list_layers and create new variables with the names <layer>_folder_name and/or <layer>_prefixes
-    # Full documentation for packge: https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/ 
+    # Full documentation for packge: https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/
+    # To run this package: dbt build --select package:dbt_project_evaluator 
     model_types: ['raw', 'data_product', 'transform']
 
     raw_folder_name: 'raw'
