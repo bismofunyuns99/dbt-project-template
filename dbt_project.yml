@@ -1,38 +1,125 @@
+# Rename this project below to match the name of your Snowflake database or
+# a name that closely reflects the intended use of your data product(s).
+# Project names should contain only lowercase characters and underscores. 
+# Do not modify the version and config-version below.
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'my_new_project'
+name: 'my_project_name'
 version: '1.0.0'
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'default'
+# This setting configures which "profile" dbt uses for this project. 
+# In dbt Cloud IDE, this field is unused. However, it is critical with DBT Core.
+profile: 'my_project_profile'
+
+# Variables that can be used in models or other objects
+vars:
+  
+  # The following sets of variables (i.e. folder names, suffixes, & prefixes) are used with the package "dbt_project_evaluator".
+  # To add a new "layer", update the variable list_layers and create new variables with the names <layer>_folder_name and/or <layer>_prefixes 
+  model_types: ['raw', 'data_product', 'transform']
+
+  raw_folder_name: 'raw'
+  transform_folder_name: 'transform'
+  data_product_folder_name: 'data_product'
+
+  raw_suffixes: ['_raw']
+  transform_suffixes: ['_rslt', '_vrslt']
+  data_product_suffixes: ['_fct', '_dim', '_dp', '_vfct', '_vdim', '_vdp']
+  other_suffixes: ['_oth', 'lk', 'vlk']
+  
+  # Following is an example defining a `start_date` variable, accessible in all resources.
+  # For example, this variable could be referenced as filter within a SQL WHERE clause of a model.
+  start_date: '2016-06-01'
+ 
+  # Following is an example defining a `platform` variable, 
+  # accessible only to resources in the project 'my_project_name'
+  my_project_name:
+    platforms: ['web', 'mobile']
+    dev_db: 'dbt_dev'
+    prod_db: 'dbt_prod'
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
+# found in the "models/" directory. You should not need to modify these variables.
+source-paths: ["models"]
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
+# directory which will store compiled SQL files
+target-path: "target"  
 
+# directories to be removed by `dbt clean`
+clean-targets:         
+    - "target"
+    - "dbt_modules"
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+# on-run-start and on-run-end are SQL statement(s) or macros that run at the beginning or end of 
+# dbt run/dbt/seed/dbt snapshot commands. 
+# Full documentation: https://docs.getdbt.com/reference/project-configs/on-run-start-on-run-end
 
-# In this example config, we tell dbt to build all models in the example/ directory
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
+on-run-end:
+  # Examples below.  *NOTE: uncommenting the artifacts macro below will load metadata about your project into Snowflake
+  # - "{{ dbt_artifacts.upload_results(results) }}"
+  # - "{{ grant_all_on_schemas(schemas, 'public') }}"
+
+#################################################################
+#  THE REMAINING SECTIONS ARE FOR CONFIGURING PROJECT RESOURCES #
+#################################################################
+
+# Configuring models. Full documentation: https://docs.getdbt.com/docs/configuring-models
+# For model config, we tell dbt how to build the models, where to build them and which Snowflake warehouseto use. 
+# NOTE: These settings can be overridden in the individual model files using the `{{ config(...) }}` macro. 
+
 models:
-  my_new_project:
-    # Applies to all files under models/example/
-    example:
-      materialized: view
+  
+  # When you rename the project at the beginning of this yaml file, remember to rename it here too. 
+  # All configurations under "my_project_name" apply only to "my_project_name"
+  my_project_name:
+    # snowflake_warehouse: compute_wh
+
+    transform:
+      # This configuration builds every model under the tranform directory into Snowflake schema named "transform".
+      +schema: transform
+      # This config does a create/replace on every run. For "incremental" loads, override this config within each model file
+      +materialized:  table  
+
+        # The following subfolders are simply for organizing models within your project. 
+        # This can be helpful for organizing models in a multi-step pipeline using multiple intermediate tables.  
+        # These folders do not correspond a "layer_x" schema in Snowflake.to  and, for example, do not correspond to 
+        
+        layer_1:
+        # Configs below apply to all models under models/transform/layer_1 folder
+
+        layer_2:
+       # Configs below apply to all models under models/transform/layer_2 folder
+
+      data_product:
+      # This configuration builds every model under the data_product directory into Snowflake schema named "data_product".
+        +schema: transform
+
+    data_product:
+      # This configuration builds every model under the tranform directory into Snowflake schema named "data_product".
+      +schema: data_product
+      # This config does a create/replace on every run. For "incremental" loads, override this config within each model file
+      +materialized:  table  
+
+  dbt_project_evaluator:
+    +schema: project_evaluator
+
+# Configuring tests. Full documentation: https://docs.getdbt.com/docs/building-a-dbt-project/seeds
+seeds:
+  my_project_name:
+    # This declares that column names in the seed file will not be quoted when the table is created.
+    +quote_columns: false
+
+# Configuring tests. Full documentation: https://docs.getdbt.com/reference/test-configs
+tests:
+  my_project_name:
+
+
+
+
+
