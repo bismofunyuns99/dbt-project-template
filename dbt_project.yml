@@ -110,7 +110,7 @@ models:
     x_project_evaluator:
       +schema: project_evaluator
       +materialized: table
-  #
+  
   dbt_project_evaluator:
     +schema: project_evaluator
 
