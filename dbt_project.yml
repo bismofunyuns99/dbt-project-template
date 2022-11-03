@@ -107,6 +107,9 @@ models:
     # This configuration builds every model under the data_product directory into Snowflake schema named "data_product".
       +schema: transform
 
+    x_project_evaluator:
+      +schema: project_evaluator
+      +materialized: table
   #
   dbt_project_evaluator:
     +schema: project_evaluator
